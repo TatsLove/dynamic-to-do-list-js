@@ -1,43 +1,49 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("registration-form");
-    const feedbackDiv = document.getElementById("form-feedback");
+// Wait until the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Select DOM elements
+    const addButton = document.getElementById('add-task-btn');
+    const taskInput = document.getElementById('task-input');
+    const taskList = document.getElementById('task-list');
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
+    // Function to add a new task
+    function addTask() {
+        const taskText = taskInput.value.trim();
 
-        const username = document.getElementById("username").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-
-        let isValid = true;
-        const messages = [];
-
-        // Username validation
-        if (username.length < 3) {
-            isValid = false;
-            messages.push("Username must be at least 3 characters long.");
+        // Alert if the input is empty
+        if (taskText === "") {
+            alert("Please enter a task.");
+            return;
         }
 
-        // Email validation
-        if (!email.includes("@") || !email.includes(".")) {
-            isValid = false;
-            messages.push("Please enter a valid email address.");
-        }
+        // Create new list item for the task
+        const li = document.createElement('li');
+        li.textContent = taskText;
 
-        // Password validation
-        if (password.length < 8) {
-            isValid = false;
-            messages.push("Password must be at least 8 characters long.");
-        }
+        // Create the remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = "Remove";
+        removeBtn.className = "remove-btn";
 
-        feedbackDiv.style.display = "block";
+        // Event handler to remove task
+        removeBtn.onclick = () => {
+            taskList.removeChild(li);
+        };
 
-        if (isValid) {
-            feedbackDiv.textContent = "Registration successful!";
-            feedbackDiv.style.color = "#28a745"; // Green
-        } else {
-            feedbackDiv.innerHTML = messages.join("<br>");
-            feedbackDiv.style.color = "#dc3545"; // Red
+        // Append button to li, then li to ul
+        li.appendChild(removeBtn);
+        taskList.appendChild(li);
+
+        // Clear the input field
+        taskInput.value = "";
+    }
+
+    // Add event listener to Add Task button
+    addButton.addEventListener('click', addTask);
+
+    // Allow Enter key to add a task
+    taskInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            addTask();
         }
     });
 });
